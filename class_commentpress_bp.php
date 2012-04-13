@@ -989,8 +989,8 @@ class CommentPressBuddyPress {
 	 * @todo: 
 	 *
 	 */
-	function signup_blogform( $errors ){
-		
+	function signup_blogform( $errors ) {
+	
 		// only apply to group blog signup form
 		if ( bp_is_groups_component() ) {
 		
