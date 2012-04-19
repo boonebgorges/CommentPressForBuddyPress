@@ -57,6 +57,9 @@ class CommentPressBuddyPress {
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
 	
+		// check dependencies
+		$this->check_dependencies();
+
 		// init
 		$this->_init();
 
@@ -145,6 +148,53 @@ class CommentPressBuddyPress {
 	--------------------------------------------------------------------------------
 	*/
 	
+	/** 
+	 * @description: on activation, check for BuddyPress and BP-Groupblog
+	 * @todo: 
+	 *
+	 */
+	function check_dependencies() {
+	
+		// init message
+		$msg = array();
+	
+		// is it installed?
+		if ( !defined( 'BP_VERSION' ) ) {
+			
+			// BuddyPress missing
+			$msg[] = 'BuddyPress must be installed.';
+			
+		}
+		
+		// check for BP Groupblog installation
+		$groupblog = get_site_option( 'bp_groupblog_blog_defaults_options', array() );
+		
+		// is it installed?
+		if ( empty( $groupblog ) ) {
+			
+			// BuddyPress missing
+			$msg[] = 'BP Groupblog must be installed.';
+			
+		}
+		
+		// did we get any errors?
+		if ( !empty( $msg ) ) {
+		
+			// implode list for output
+			$out = implode( "\n", $msg );
+			
+			// die
+			die( $out );
+		
+		}
+		
+	}
+	
+	
+	
+
+
+
 	/**
 	 * Add language support.
 	 */
@@ -1358,9 +1408,14 @@ class CommentPressBuddyPress {
 	
 		// is this the back end?
 		if ( is_admin() ) {
+		
+			// if BP...
+			if ( function_exists( 'bp_core_admin_hook' ) ) {
 	
-			// add menu to BuddyPress submenu
-			add_action( bp_core_admin_hook(), array( &$this, 'add_admin_menu' ), 30 );
+				// add menu to BuddyPress submenu
+				add_action( bp_core_admin_hook(), array( &$this, 'add_admin_menu' ), 30 );
+			
+			}
 		
 		} else {
 		
