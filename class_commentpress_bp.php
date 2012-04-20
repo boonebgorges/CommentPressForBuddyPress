@@ -420,6 +420,26 @@ class CommentPressBuddyPress {
 	--------------------------------------------------------------------------------
 	*/
 	
+	/**
+	 * Allow HTML comments and content in Multisite blogs
+	 */
+	function allow_html_content() {
+		
+		// using publish_posts for now - means author+
+		if ( current_user_can( 'publish_posts' ) ) {
+
+			// remove html filtering on content. Note - this has possible consequences...
+			// see: http://wordpress.org/extend/plugins/unfiltered-mu/
+			kses_remove_filters();
+		
+		}
+	}
+	
+	
+	
+
+
+
 	/** 
 	 * @description: override capability to comment based on group membership.
 	 * @todo:
@@ -1373,6 +1393,9 @@ class CommentPressBuddyPress {
 		
 		// enable translation
 		add_action( 'init', array( &$this, 'translation' ) );
+		
+		// enable html comments and content for authors
+		add_action( 'init', array( &$this, 'allow_html_content' ) );
 		
 		// amend comment activity
 		add_filter( 'pre_comment_approved', array( &$this, 'pre_comment_approved' ), 20, 2 );
